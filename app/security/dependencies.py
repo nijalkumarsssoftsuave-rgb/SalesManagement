@@ -20,6 +20,10 @@ def get_current_user(
     if payload.get("token_type") != "access":
         raise HTTPException(status_code=401, detail="Invalid access token")
 
+    required_keys = {"id", "email", "role", "token_type"}
+    if not required_keys.issubset(payload):
+        raise HTTPException(status_code=401, detail="Invalid token payload")
+
     return payload
 
 

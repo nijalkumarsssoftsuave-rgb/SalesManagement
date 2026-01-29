@@ -1,14 +1,36 @@
-# app/models/product.py
-from sqlalchemy import Column, Integer, String, DateTime
-from datetime import datetime
+# from sqlalchemy import Column, Integer, String, ForeignKey
+# from sqlalchemy.orm import relationship
+# from database.db_base import Base
+#
+#
+# class Product(Base):
+#     __tablename__ = "products"
+#
+#     id = Column(Integer, primary_key=True, index=True)
+#     name = Column(String, nullable=False)
+#     total_quantity = Column(Integer, nullable=False)
+#     created_by = Column(Integer, ForeignKey("users.id"), nullable=False)
+#
+#     manager = relationship("User", back_populates="products")
+#     assignments = relationship("ProductAssignment", back_populates="product", cascade="all, delete")
+
+from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy.orm import relationship
 from database.db_base import Base
+
 
 class Product(Base):
     __tablename__ = "products"
 
-    product_id = Column(Integer, primary_key=True, index=True)
-    product_name = Column(String(150), nullable=False)
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, nullable=False)
+    total_quantity = Column(Integer, nullable=False)
 
-    products_available = Column(Integer, default=0)
+    created_by = Column(Integer, ForeignKey("users.id"), nullable=False)
 
-    product_created_time = Column(DateTime, default=datetime.utcnow)
+    manager = relationship("User", back_populates="products")
+    assignments = relationship(
+        "ProductAssignment",
+        back_populates="product",
+        cascade="all, delete"
+    )

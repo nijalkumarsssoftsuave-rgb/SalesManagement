@@ -36,15 +36,7 @@ def change_password_first_login(
         "message": "Password updated successfully. Please login again."
     }
 
-@auth_router.post(
-    "/admin/create-manager",
-    dependencies=[Depends(require_min_role("ADMIN"))]
-)
-def admin_create_manager(
-    data: ManagerCreate,
-    db: Session = Depends(get_db)
-):
-    return create_manager(db, data)
+
 
 @auth_router.post(
     "/manager/create-team-member",
@@ -55,4 +47,4 @@ def manager_create_team_member(
     db: Session = Depends(get_db),
     current_user=Depends(get_current_user)
 ):
-    return create_team_member(db, data, manager_id=current_user.id)
+    return create_team_member(db, data, manager_id=current_user["id"])
