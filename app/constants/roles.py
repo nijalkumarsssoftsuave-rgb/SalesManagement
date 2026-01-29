@@ -1,0 +1,10 @@
+# app/constants/roles.py
+ROLE_ADMIN = "ADMIN"
+ROLE_MANAGER = "MANAGER"
+ROLE_TEAM = "TEAM_MEMBER"
+
+ROLE_LEVEL = {
+    ROLE_ADMIN: 3,
+    ROLE_MANAGER: 2,
+    ROLE_TEAM: 1,
+}
