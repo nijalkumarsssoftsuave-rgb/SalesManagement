@@ -1,4 +1,3 @@
-# app/pydantic/signup.py
 from pydantic import BaseModel, EmailStr, Field
 
 class AdminCreate(BaseModel):

@@ -85,7 +85,6 @@ def assign_product_service(db: Session, user: dict, product_id: int):
 
     db.commit()
 
-    # 🔑 SERIALIZABLE RESPONSE
     return [
         {
             "product_id": a.product_id,
