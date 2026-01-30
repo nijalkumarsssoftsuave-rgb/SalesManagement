@@ -8,8 +8,6 @@ from app.security.jwt_utils import create_access_token, create_refresh_token,cre
 def login_user(db: Session, email: EmailStr, password: str):
     user = db.query(User).filter(User.email == email).first()
 
-    print(user.role)
-
     if not user or not verify_password(password, user.password):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
