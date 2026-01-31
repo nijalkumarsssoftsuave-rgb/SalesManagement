@@ -12,7 +12,7 @@ class Product(Base):
 
     created_by = Column(Integer, ForeignKey("users.id"), nullable=False)
 
-    category = Column(String, nullable=False)
+    # category = Column(String, nullable=False)
 
     manager = relationship("User", back_populates="products")
     assignments = relationship(

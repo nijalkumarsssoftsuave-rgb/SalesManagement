@@ -1,6 +1,6 @@
-from datetime import datetime
-from sqlalchemy import Column, Integer, String, Date, DateTime, ForeignKey
+from sqlalchemy import Column, Date, Integer, ForeignKey
 from database.db_base import Base
+
 
 class SalesmanTask(Base):
     __tablename__ = "salesman_tasks"

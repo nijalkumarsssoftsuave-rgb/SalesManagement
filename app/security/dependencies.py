@@ -36,3 +36,14 @@ def get_password_reset_user(
     if not payload or payload.get("token_type") != "password_reset":
         raise HTTPException(status_code=401, detail="Invalid password reset token")
     return payload
+
+def get_user_mode(user, message):
+    msg = message.lower()
+
+    if user["role"] == "MANAGER" and "update today's task" in msg:
+        return "MANAGER_TASK"
+
+    if user["role"] == "TEAM_MEMBER" and "today's task" in msg:
+        return "SALESMAN_TASK"
+
+    return "NORMAL"

@@ -8,6 +8,7 @@ class DailyTask(Base):
     id = Column(Integer, primary_key=True)
     manager_id = Column(Integer, ForeignKey("users.id"))
     product_id = Column(Integer, ForeignKey("products.id"))
+    product_name = Column(String, nullable=False)
     total_quantity = Column(Integer)
     target_per_person = Column(Integer)
     task_date = Column(Date)
