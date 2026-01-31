@@ -16,3 +16,10 @@ class ProductResponse(BaseModel):
 
     class Config:
         orm_mode = True
+
+#Demo
+class DailyTaskRequest(BaseModel):
+    manager_id: int
+    product_name: str
+    quantity: int
+    target: int

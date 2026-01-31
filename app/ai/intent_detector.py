@@ -19,17 +19,6 @@ If not, return:
 Return ONLY valid JSON. No text.
 """
 
-# def detect_intent(message: str) -> dict:
-#     response = llm.invoke([
-#         {"role": "system", "content": INTENT_SYSTEM_MESSAGE},
-#         {"role": "user", "content": message}
-#     ])
-#
-#     try:
-#         return json.loads(response.content)
-#     except Exception:
-#         return {"intent": "none"}
-
 def detect_intent(message: str) -> dict:
     response = llm.invoke([
         {"role": "system", "content": INTENT_SYSTEM_MESSAGE},

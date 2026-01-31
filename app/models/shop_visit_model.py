@@ -1,7 +1,8 @@
 from datetime import datetime
 from sqlalchemy import Column, Integer, String, Date, DateTime, ForeignKey,Float
 from database.db_base import Base
-# app/models/shop_visit.py
+
+
 class ShopVisit(Base):
     __tablename__ = "shop_visits"
 

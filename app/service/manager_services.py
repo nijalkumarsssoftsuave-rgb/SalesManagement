@@ -3,8 +3,12 @@ from sqlalchemy.orm import Session
 from app.models.productAssignment import ProductAssignment
 from app.models.users_model import User
 from app.models.team_request_model import TeamRequest
-
-
+from app.models.dailyTask_model import DailyTask
+from app.models.product_model import Product
+from datetime import date
+from app.utils.chat_state import MANAGER_TASK_MODE
+from app.pydantics.product_pydantics import ProductCreate
+from app.service.product_services import update_product_quantity_service, create_product_service
 
 def get_my_team_service(db: Session, manager_id: int):
     rows = (
@@ -22,7 +26,6 @@ def get_my_team_service(db: Session, manager_id: int):
         .filter(User.manager_id == manager_id)
         .all()
     )
-
     return [
         {
             "id": r.user_id,
@@ -81,3 +84,85 @@ def request_team_member_service(db: Session, member_id: int, manager_id: int):
     db.commit()
 
     return {"message": "Team member request sent"}
+
+def create_daily_task(db, manager_id, product_id, quantity, target):
+    task = DailyTask(
+        manager_id=manager_id,
+        product_id=product_id,
+        total_quantity=quantity,
+        target_per_person=target,
+        task_date=date.today()
+    )
+    db.add(task)
+    db.commit()
+
+
+def handle_manager_task(db, user):
+    """
+    Entry point when manager says:
+    'I want to update today's task'
+    """
+    MANAGER_TASK_MODE.add(user["id"])
+
+    return {
+        "mode": "MANAGER_TASK",
+        "message": (
+            "Enter task details in this format:\n"
+            "Product name, total quantity, target per person\n\n"
+            "Example:\n"
+            "Iphone 15, 100, 10"
+        )
+    }
+
+def save_daily_task(db, manager_id, product_name, quantity, target):
+    # 1️⃣ Find product
+    product = db.query(Product).filter(
+        Product.name.ilike(f"%{product_name}%"),
+        Product.created_by == manager_id
+    ).first()
+
+    # 2️⃣ Create if missing
+    if not product:
+        product_data = ProductCreate(
+            name=product_name,
+            total_quantity=quantity
+        )
+
+        product = create_product_service(
+            db=db,
+            user={"id": manager_id},
+            data=product_data
+        )
+
+    # 3️⃣ Update quantity if exists
+    else:
+        update_product_quantity_service(
+            db=db,
+            user={"id": manager_id},
+            product_id=product.id,
+            qty=quantity
+        )
+
+        # 🔴 CRITICAL FIX → re-fetch product
+        product = db.query(Product).filter(
+            Product.id == product.id
+        ).first()
+
+    # 🔐 Safety check
+    if not product:
+        raise ValueError("Product creation/update failed")
+
+    # 4️⃣ Create DailyTask
+    task = DailyTask(
+        manager_id=manager_id,
+        product_id=product.id,
+        product_name=product.name,
+        total_quantity=quantity,
+        target_per_person=target,
+        task_date=date.today()
+    )
+
+    db.add(task)
+    db.commit()
+
+    return product

@@ -2,19 +2,6 @@ from fastapi import Depends, HTTPException
 from app.constants.roles import ROLE_LEVEL
 from app.security.dependencies import get_current_user
 
-# def require_min_role(role: str):
-#     def checker(user=Depends(get_current_user)):
-#         user_role = user.get("role")
-#
-#         if not user_role:
-#             raise HTTPException(status_code=403, detail="Role not found in token")
-#
-#         if ROLE_LEVEL[user_role] < ROLE_LEVEL[role]:
-#             raise HTTPException(status_code=403, detail="Forbidden")
-#
-#         return user
-#     return checker
-
 def require_min_role(required_role: str):
     def checker(user=Depends(get_current_user)):
         user_role = user.get("role")
