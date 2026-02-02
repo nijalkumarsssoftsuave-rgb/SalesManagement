@@ -29,3 +29,18 @@ def build_optimized_route(
         "distance_km": route["legs"][0]["distance"]["value"] / 1000,
         "duration_min": route["legs"][0]["duration"]["value"] / 60
     }
+
+def optimized_route(shops, start_lat, start_lng):
+    waypoints = "|".join(
+        [f"{s['lat']},{s['lng']}" for s in shops]
+    )
+
+    return {
+        "google_route_url": (
+            "https://www.google.com/maps/dir/"
+            f"{start_lat},{start_lng}/"
+            + waypoints
+        )
+    }
+
+
